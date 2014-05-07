@@ -5,6 +5,9 @@ var webrtc = (function(){
         display = document.getElementById('display'),
         displayContext = display.getContext('2d');
 
+    display.width = feed.width = 320;
+    display.height = feed.height = 240;
+
     var getVideo, getAudio, video;
 
     window.requestAnimationFrame ||
@@ -15,9 +18,6 @@ var webrtc = (function(){
         function( callback ){
             window.setTimeout(callback, 1000 / 60);
         });
-
-    display.width = feed.width = 320;
-    display.height = display.height = 240;
 
     var takePhoto = function takePhoto() {
         var photo = document.getElementById('photo'),
@@ -85,7 +85,9 @@ var webrtc = (function(){
 
     function streamFeed() {
         requestAnimationFrame(streamFeed);
-        displayContext.drawImage(video, 0, 0, display.width, display.height);
+        feedContext.drawImage(video, 0, 0, display.width, display.height);
+        var imageData = feedContext.getImageData(0, 0, display.width, display.height);
+        displayContext.putImageData(imageData, 0, 0);
     }
 
     (function init() {
