@@ -3,6 +3,7 @@ navigator.getUserMedia || (navigator.getUserMedia = navigator.mozGetUserMedia ||
 if (navigator.getUserMedia) {
 
     var onSuccess = function onSuccess(stream){
+        //1. Setup video
         var video = document.getElementById('webcam');
         var videoSource;
 
@@ -14,6 +15,18 @@ if (navigator.getUserMedia) {
 
         video.autoplay = true;
         video.src = videoSource;
+
+        //2. Setup audio
+        var audioContext, mediaStreamSource;
+
+        window.audioContext || (window.audioContext = window.webkitAudioContext);
+
+        if (window.audioContext) {
+            audioContext = new window.audioContext();
+            mediaStreamSource = audioContext.createMediaStreamSource(stream);
+
+            mediaStreamSource.connect(audioContext.destination);
+        }
     };
 
     var onError = function onError(){
