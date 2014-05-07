@@ -26,7 +26,7 @@ var webrtc = (function(){
         photo.width = display.width;
         photo.height = display.height;
 
-        context.drawImage(video, 0, 0, photo.width, photo.height);
+        context.drawImage(display, 0, 0, photo.width, photo.height);
     }
 
     function onSuccess(stream){
