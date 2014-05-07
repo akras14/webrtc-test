@@ -1,20 +1,39 @@
-(function(){
+var webrtc = (function(){
+
+    var feed = document.getElementById('feed'),
+        feedContext = feed.getContext('2d'),
+        display = document.getElementById('display'),
+        displayContext = display.getContext('2d');
+
     var getVideo, getAudio, video;
+
+    window.requestAnimationFrame ||
+    (window.requestAnimationFrame = window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+        });
+
+    display.width = feed.width = 320;
+    display.height = display.height = 240;
 
     var takePhoto = function takePhoto() {
         var photo = document.getElementById('photo'),
             context = photo.getContext('2d');
 
-        photo.width = video.clientWidth;
-        photo.height = video.clientHeight;
+        photo.width = display.width;
+        photo.height = display.height;
 
         context.drawImage(video, 0, 0, photo.width, photo.height);
     };
 
-    var photoButton = document.getElementById('takePhoto');
-    photoButton.addEventListener('click', takePhoto, false);
-
     var onSuccess = function onSuccess(stream){
+
+        var photoButton = document.getElementById('takePhoto');
+        photoButton.addEventListener('click', takePhoto, false);
+
         //1. Setup video
         if(getVideo){
             video = document.getElementById('webcam');
@@ -28,6 +47,8 @@
 
             video.autoplay = true;
             video.src = videoSource;
+
+            streamFeed();
         }
 
         //2. Setup audio
@@ -61,6 +82,11 @@
             alert('getUserMedia is not supported in this browser.');
         }
     };
+
+    function streamFeed() {
+        requestAnimationFrame(streamFeed);
+        displayContext.drawImage(video, 0, 0, display.width, display.height);
+    }
 
     (function init() {
         getVideo = true;
