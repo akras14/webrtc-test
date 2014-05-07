@@ -19,7 +19,7 @@ var webrtc = (function(){
             window.setTimeout(callback, 1000 / 60);
         });
 
-    var takePhoto = function takePhoto() {
+    function takePhoto() {
         var photo = document.getElementById('photo'),
             context = photo.getContext('2d');
 
@@ -27,9 +27,9 @@ var webrtc = (function(){
         photo.height = display.height;
 
         context.drawImage(video, 0, 0, photo.width, photo.height);
-    };
+    }
 
-    var onSuccess = function onSuccess(stream){
+    function onSuccess(stream){
 
         var photoButton = document.getElementById('takePhoto');
         photoButton.addEventListener('click', takePhoto, false);
@@ -64,11 +64,11 @@ var webrtc = (function(){
                 mediaStreamSource.connect(audioContext.destination);
             }
         }
-    };
+    }
 
-    var onError = function onError(){
+    function onError(){
         alert("Error");
-    };
+    }
 
     var requestStreams = function requestStreams() {
         navigator.getUserMedia || (navigator.getUserMedia = navigator.mozGetUserMedia || navigator.webkitGetUserMedia || navigator.msGetUserMedia);
@@ -83,10 +83,39 @@ var webrtc = (function(){
         }
     };
 
+    addEffects = {
+        red: function addEffects(data) {
+            for (var i = 0, l = data.length; i < l; i += 4) {
+                data[i + 1] = 0; // g
+                data[i + 2] = 0; // b
+            }
+            return data;
+        },
+        invert: function (data) {
+            for (var i = 0, l = data.length; i < l; i += 4) {
+                data[i] = 255 - data[i]; // r
+                data[i + 1] = 255 - data[i + 1]; // g
+                data[i + 2] = 255 - data[i + 2]; // b
+            }
+            return data;
+        },
+        transparentRed: function (data) {
+            for (var i = 0, l = data.length; i < l; i += 4) {
+                if (data[i] > 127) {
+                    data[i + 3] = 127;
+                }
+            }
+            return data;
+        }
+    }
+
     function streamFeed() {
         requestAnimationFrame(streamFeed);
         feedContext.drawImage(video, 0, 0, display.width, display.height);
         var imageData = feedContext.getImageData(0, 0, display.width, display.height);
+
+        //Change effect bellow to addEffects.red or addEffects.transparentRed to see different effects
+        imageData.data = addEffects.invert(imageData.data);
         displayContext.putImageData(imageData, 0, 0);
     }
 
