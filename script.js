@@ -1,10 +1,23 @@
 (function(){
-    var getVideo, getAudio;
+    var getVideo, getAudio, video;
+
+    var takePhoto = function takePhoto() {
+        var photo = document.getElementById('photo'),
+            context = photo.getContext('2d');
+
+        photo.width = video.clientWidth;
+        photo.height = video.clientHeight;
+
+        context.drawImage(video, 0, 0, photo.width, photo.height);
+    };
+
+    var photoButton = document.getElementById('takePhoto');
+    photoButton.addEventListener('click', takePhoto, false);
 
     var onSuccess = function onSuccess(stream){
         //1. Setup video
         if(getVideo){
-            var video = document.getElementById('webcam');
+            video = document.getElementById('webcam');
             var videoSource;
 
             if (window.webkitURL) {
