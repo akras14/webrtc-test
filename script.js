@@ -83,7 +83,7 @@ var webrtc = (function(){
         }
     };
 
-    addEffects = {
+    var addEffects = {
         red: function addEffects(data) {
             for (var i = 0, l = data.length; i < l; i += 4) {
                 data[i + 1] = 0; // g
@@ -107,7 +107,7 @@ var webrtc = (function(){
             }
             return data;
         }
-    }
+    };
 
     function streamFeed() {
         requestAnimationFrame(streamFeed);
